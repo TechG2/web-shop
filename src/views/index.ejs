@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .custom-card-col {
+            max-width: 300px;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+            object-fit: cover;
+        }
+
+        .btn-category {
+            border-bottom: 1px solid gray;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-category:hover {
+            background: rgba(185, 185, 185, 0.25);
+            border-bottom: 1px solid rgb(68, 68, 68);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <% if (isAuthenticated) { %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <%= name %>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <form action="/logout?_method=DELETE" method="post">
+                                        <button class="dropdown-item">Log Out</button>
+                                    </form>
+                                </li>
+                                <li><a class="dropdown-item" aria-current="page" href="/cart">Shopping Cart</a></li>
+                            </ul>
+                        </li>
+                        <% } else { %>
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="/login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="/register">Sign up</a>
+                            </li>
+                            <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home -->
+    <div class="container mt-5">
+        <div class="mb-3" style="float: left;">
+            <form method="get" action="/" style="display: inline-block;">
+                <input type="hidden" name="category" value="All">
+                <button type="submit" class="pl-5 m-1 p-1 btn btn-category" style="display: inline-block;">
+                    All <small class="text-muted" style="display: inline-block;">
+                        <%= products.length %>
+                    </small>
+                </button>
+            </form>
+            <% products.map(product=> product.category).filter((value, index, self) => self.indexOf(value) ===
+                index).forEach(category => { %>
+                <form method="get" action="/" style="display: inline-block;">
+                    <input type="hidden" name="category" value="<%= category %>">
+                    <button type="submit" class="pl-5 m-1 p-1 btn btn-category" style="display: inline-block;">
+                        <%= category %> <small class="text-muted" style="display: inline-block;">
+                                <%= products.filter(product=> product.category === category).length %>
+                            </small>
+                    </button>
+                </form>
+                <% }) %>
+        </div>
+        <form class="d-flex" style="margin-left: 50px;" role="search" action="/" method="get">
+            <input class="form-control me-2" type="search" placeholder="Search..." name="search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        <div class="mt-4">
+            <hr>
+        </div>
+        <div class="row" id="products-container">
+            <% if (!toView[0]) { %>
+                <p class="text-muted" style="text-align: center;">No products found.</p>
+                <% } else { %>
+                    <% toView.forEach((product)=> { %>
+                        <div class="col-lg-4 col-md-6 mb-4 custom-card-col">
+                            <div class="card h-100 d-flex">
+                                <img class="card-img-top rounded" src="/images/<%= product.image %>"
+                                    alt="<%= product.title %>">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= product.title %>
+                                    </h5>
+                                    <p class="card-text">
+                                        <%= product.description %>
+                                    </p>
+                                    <p class="card-text" style="float: left;">
+                                        <strong>Price: <%= product.price.toFixed(2) %> €</strong>
+                                    </p>
+                                    <form method="post" action="/cart" style="display: inline; float: right;">
+                                        <input type="hidden" name="productId" value="<%= product.productId %>">
+                                        <input type="hidden" name="type" value="add">
+                                        <button type="submit" class="btn btn-primary mt-2">Add to Cart</button>
+                                    </form>
+                                </div>
+                                <div class="card-footer mt-auto">
+                                    <small class="text-muted">Category: <%= product.category %></small>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                            <% } %>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
