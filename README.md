@@ -1,13 +1,10 @@
 # Shop Back-end
-
 A simple web shop with an auth system made in NodeJs.
 
 _This project was created for demonstration purposes only._
 
-# Package
-
-Package used:
-
+## Other
+### Packages:
 - Dotenv
 - Express
 - Express Flash
@@ -19,9 +16,10 @@ Package used:
 - Passport Local
 - Passport Google OAuth2 - For Google OAuth2
 - Method Override
+### Other
+- `DataBase` - MongoDB
+- `Language` - JavaScript
 
-# Credits
-
+## Credits
 Made by:
-
-- TechG
+* [TechG](https://github.com/TechG2)
