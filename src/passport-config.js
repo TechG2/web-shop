@@ -1,6 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const UserSchema = require("./Schemas/UserSchema");
 const { model } = require("mongoose");
 require("dotenv").config();
